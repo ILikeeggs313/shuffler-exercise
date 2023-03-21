@@ -1,0 +1,36 @@
+.DrawCard{
+    text-align: center;
+}
+
+.button-to-draw{
+    padding: 15px;
+  background-color: black;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  margin: 0 10px;
+}
+
+.button-to-shuffle{
+    padding: 15px;
+  background-color: black;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  margin: 0 10px;
+}
+
+.button-to-draw:hover {
+    cursor: pointer;
+    background-color: #444;
+  }
+  
+  .button-to-draw:active,
+  .button-to-draw:focus {
+    outline: none;
+  }
+  
+  .card-area {
+    margin-top: 80px;
+  }
+  

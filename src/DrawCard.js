@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Card from "./card";
+import "./DrawCard.css";
 
 const DrawCard = () => {
     let BASE_API = "https://deckofcardsapi.com/api/deck/";
     //initially no deck, then we get a deck
     const [deck, setDeck] = useState(null);
     const [draw, setDraw] = useState([]);
+    const [shuffle, setShuffle] = useState(false);
 
     useEffect(function loadDeckAPI() {
             //we use axios and async here to get the first shuffle
@@ -13,7 +16,7 @@ const DrawCard = () => {
                 const shuffleData = await axios.get(
                     `${BASE_API}/new/shuffle`
                 )
-                setDeck(shuffleData);
+                setDeck(shuffleData.data);
             };
             getData()
             //we add a [] callback for useEffect
@@ -31,7 +34,7 @@ const DrawCard = () => {
                 {
                     id: card.code,
                     name: card.suit + " " + card.value,
-                    img: card.image
+                    image: card.image
                 }
             ])
 
@@ -40,7 +43,19 @@ const DrawCard = () => {
         }
     }
     //leave blank to implement shuffle 
-    
+    async function getShuffle(){
+        setShuffle(true);
+        //we can use a try and catch to catch errors
+        try{
+            await axios.get(`${BASE_API}/${deck.deck_id}/shuffle`);
+            setDraw([]);
+
+        } catch (e){
+            alert(e);
+        } finally{
+            setShuffle(false);
+        }
+    }
 
     //
     function getButtonToDraw() {
@@ -51,6 +66,7 @@ const DrawCard = () => {
                 <button
                     className = "button-to-draw"
                     onClick = {drawCard}
+                    disabled = {shuffle}
                 >
                     DRAW A CARD!
                 </button>
@@ -58,11 +74,35 @@ const DrawCard = () => {
         )
     }
 
+    //get shuffle button
+    function getShuffleButton(){
+        if(!deck) return null;
+        return(
+            <button
+                className = "button-to-shuffle"
+                onClick = {getShuffle}
+                disabled = {shuffle}
+
+            > Shuffle
+
+            </button>
+        )
+    }
+
 
     return(
-        <div>
-            {getButtonToDraw()}
-        </div>
+       <main className = "DrawCard">
+           {getButtonToDraw()}
+           {getShuffleButton()}
+
+           <div className = "card-area">
+               {draw.map(c =>(
+                   //we need to map over the cards
+                   <Card key = {c.id} name = {c.name} image = {c.image} />
+                   )
+               )}
+           </div>
+       </main>
     )
 }
 
